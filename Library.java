@@ -1,14 +1,23 @@
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.Date;
 
 public class Library {
-    private ArrayList<Book> books = new  ArrayList<Book>();
+
+    private double penalty = 0.2;
+    private String name;
+
+    private ArrayList<Book> books = new ArrayList<Book>();
     private ArrayList<Reader> readers = new  ArrayList<Reader>();
     private ArrayList<Rental> rentals = new  ArrayList<Rental>();
+    private BigDecimal delayFee;
 
-    public Library()
-    {
-
+    public Library(String name) {
+        this.name = name;
     }
+
     public void addBook(Book book)
     {
         books.add(book);
@@ -33,25 +42,55 @@ public class Library {
     {
         for(int i=0; i<books.size(); i++)
         {
-            books.get(i).bookDisp();
+            System.out.println(books.get(i).toString());
         }
     }
 
-    public void search(String key)
+    public boolean isBookRented(String isbn) {
+        return books.stream().anyMatch(b -> b.getIsbn().equals(isbn) && b.getRented()); // wyszukiwanie po isbn i tylko wypożyczonej
+    }
+
+    public boolean isBookRented(Book book) {
+        return isBookRented(book.getIsbn());
+    }
+
+    public List<Book> findByAuthor(String author) {
+        return books.stream().filter(b -> b.getAuthor().equals(author)).collect(Collectors.toList());
+    }
+    public List<Book> findByTitle(String title) {
+        return books.stream().filter(b -> b.getTitle().equals(title)).collect(Collectors.toList());
+    }
+
+    public List<Book> findByIsbn(String isbn) {
+        return books.stream().filter(b -> b.getIsbn().equals(isbn)).collect(Collectors.toList());
+    }
+
+    public List<Book> findByYear(int year) {
+        return books.stream().filter(b -> b.getYear()==year).collect(Collectors.toList());
+    }
+
+    public List<Book> findByGenre(String genre) {
+        return books.stream().filter(b -> b.getGenre().equals(genre)).collect(Collectors.toList());
+    }
+
+    public void endOfDay(Date currentDate)
     {
-        int i=0;
-        while((i< books.size()))
+        for (int i = 0; i < rentals.size(); i++)
         {
-            if(key==books.get(i).getAuthor()
-                ||key==books.get(i).getTitle()
-                ||key==books.get(i).getIsbn()
-                ||key==books.get(i).getYear()
-                ||key==books.get(i).getGenre())
+            if(rentals.get(i).getReturnDate().compareTo(currentDate) < 0 && !rentals.get(i).isReturned())
             {
-                System.out.println("Ksiazka znaleziona!");
-                books.get(i).bookDisp();
+                rentals.get(i).addDelay();
+                rentals.get(i).getReader().increasePenalty(getPenalty());
             }
-            i++;
         }
+
+    }
+
+    public double getPenalty()
+    {return penalty;}
+
+    public void newPenalty(double penalty)
+    {
+        this.penalty = penalty;
     }
 }

@@ -1,14 +1,13 @@
 public class Book {
     private String title;
     private String author;
-    private String year;
-
-    private String genre;
-    private String isbn;
+    private int year;
+    private String genre; // Pomyśl nad enumem może
+    private String isbn; // Może uuid, będzie unikalny?
 
     private boolean rented;
 
-    public Book(String title, String author, String year, String genre, String isbn){
+    public Book(String title, String author, int year, String genre, String isbn){
         this.title = title;
         this.author = author;
         this.year = year;
@@ -24,7 +23,7 @@ public class Book {
         return author;
     }
 
-    public String getYear(){
+    public int getYear(){
         return year;
     }
 
@@ -39,22 +38,23 @@ public class Book {
 
     public boolean getRented(){ return rented; }
 
-    public void bookDisp()
-    {
-        System.out.println("Tytul: " + getTitle() +"\n");
-        System.out.println("Autor: " + getAuthor() +"\n");
-        System.out.println("ISBN: " + getIsbn() +"\n");
-        System.out.println("ISBN: " + getYear() +"\n");
-        if (this.rented)
-        {
-            System.out.println("Ta ksiaka jest niedostepna!\n");
-        }
-        else
-        {
-            System.out.println("Ta ksiazka jest dostepna!\n");
+    public String toString() {
+        StringBuilder stringBuilder = new StringBuilder();
+
+        stringBuilder.append("Tytul: ").append(getTitle()).append("\n");
+        stringBuilder.append("Autor: ").append(getAuthor()).append("\n");
+        stringBuilder.append("ISBN: ").append(getIsbn()).append("\n");
+        stringBuilder.append("Rok wydania: ").append(getYear()).append("\n");
+
+        if (this.rented) {
+            stringBuilder.append("Ta książka jest niedostępna!\n");
+        } else {
+            stringBuilder.append("Ta książka jest dostępna!\n");
         }
 
-        System.out.println("--------------------------------------------\n\n");
+        stringBuilder.append("--------------------------------------------\n\n");
+
+        return stringBuilder.toString();
     }
     public void isRented(boolean rented)
     {

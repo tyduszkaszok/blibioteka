@@ -1,3 +1,4 @@
+import java.math.BigDecimal;
 import java.util.ArrayList;
 
 public class Reader {
@@ -6,11 +7,14 @@ public class Reader {
 
     private String surname;
 
-    private String id;
+    private int id;
+
+    private double penalty = 0.0;
 
     private ArrayList<String> history = new ArrayList<>();
+    private BigDecimal fee = BigDecimal.ZERO;
 
-    public Reader(String name, String surname, String id)
+    public Reader(String name, String surname, int id)
     {
         this.name = name;
         this.surname = surname;
@@ -25,7 +29,7 @@ public class Reader {
         return surname;
     }
 
-    public String getId(){
+    public int getId(){
         return id;
     }
 
@@ -39,5 +43,15 @@ public class Reader {
         for (int i = history.size() - 1; i >= 0; i--) {
             System.out.println(history.get(i));
         }
+    }
+
+    public void increasePenalty(double penalty)
+    {
+        this.penalty += penalty;
+    }
+
+    public double getPenalty()
+    {
+        return penalty;
     }
 }

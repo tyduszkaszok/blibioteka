@@ -1,30 +1,47 @@
+import java.util.Date;
+
 public class Rental {
-    private String author;
-    private String title;
-    private String isbn;
-    private String name;
-    private String surname;
-    private String id;
+    private Long id;
+    private Book rentedBook;
+    private Reader reader;
+    private Date rentDate;
+    private Date estimatedReturnDate;
+    private Date returnDate;
+    private int delayInDays = 0;
 
-    private String rentDate;
-    private String returnDate;
-
-    private String delay;
-
-    public Rental(Book book, Reader reader, String rentDate, String returnDate) {
-        this.author = book.getAuthor();
-        this.title = book.getTitle();
-        this.isbn = book.getIsbn();
-        this.name = reader.getName();
-        this.surname = reader.getSurname();
-        this.id = reader.getId();
-        this.rentDate = rentDate;
-        this.returnDate = returnDate;
-        book.isRented(true);
+    public Rental(Book book, Reader reader, Date estimatedReturnDate) {
+        this.id = 0L;
+        this.rentedBook = book;
+        rentedBook.isRented(true);
+        this.reader = reader;
+        this.rentDate = new Date();
+        this.estimatedReturnDate = estimatedReturnDate;
     }
 
-    void addDelay(String delay)
+    void returnBook() {
+        this.returnDate = new Date();
+        this.rentedBook.isRented(false);
+    }
+
+    /**
+     * Dodaj funkcjonalność opóźnień w zwrotach ksiązek...
+     * To ja bym to zrobił tak, że w Library masz jakąs tam kare za dzień opóźnienia
+     * w Mainie robisz metode np. koniec dnia, która dla każdego wypożyczenia sprawdza czy książka jest oddana (isReturned)
+     * a jeśli nie jest to sprawdzał czy data nowego dnia jest już za szacowana dnia oddania (estimatedReturnDate)
+     * i jeśli jest po terminie to naliczał grzywnę na czytelnika
+     */
+    void addDelay()
     {
-        this.delay = delay;
+        this.delayInDays++;
     }
+
+    public boolean isReturned() {
+        return returnDate != null;
+    }
+
+    public Date getReturnDate()
+    {return estimatedReturnDate;}
+
+    public Reader getReader()
+    {return this.reader;}
 }
